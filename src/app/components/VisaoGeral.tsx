@@ -759,21 +759,35 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
 
       {/* ── 3 Cards Principais ────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Card 1: 4 pontos de atenção */}
+        {/* Card 1: Tarefas abertas */}
         <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
+          {/* Small title */}
+          <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', marginBottom: '8px' }}>Tarefas abertas</p>
+
+          {/* Main title */}
           <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>4 pontos de atenção</p>
+
+          {/* Progress bar */}
+          <div className="mb-3">
+            <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', marginBottom: '4px' }}>Concluídas 50 de 58</p>
+            <div className="w-full rounded-full overflow-hidden" style={{ height: '8px', background: 'var(--muted)' }}>
+              <div style={{ width: '86.2%', height: '100%', background: 'var(--chart-1)', borderRadius: '999px' }} />
+            </div>
+          </div>
+
+          {/* Bullet list */}
           <div className="space-y-2.5">
             <div className="flex items-start gap-2">
-              <span style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>1</span>
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Tarefas gerando multa</span>
+              <div className="w-2 h-2 rounded-full mt-1.5" style={{ background: '#6C3FB5' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>1 tarefas gerando multa</span>
             </div>
             <div className="flex items-start gap-2">
-              <span style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>2</span>
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Tarefas atrasadas</span>
+              <div className="w-2 h-2 rounded-full mt-1.5" style={{ background: 'var(--destructive)' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>2 tarefas atrasadas</span>
             </div>
             <div className="flex items-start gap-2">
-              <span style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>3</span>
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Tarefas aguardando aprovação</span>
+              <div className="w-2 h-2 rounded-full mt-1.5" style={{ background: 'var(--chart-2)' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>2 tarefas aguardando aprovação</span>
             </div>
           </div>
         </div>
