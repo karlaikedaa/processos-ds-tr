@@ -60,6 +60,10 @@ const departamentos = [
 
 const avatarColors = ['#B83C00', '#1573D3', '#387C2B', '#D49000', '#6C3FB5', '#C0392B'];
 
+// Badge colors for multa (purple) - used in tables
+const MULTA_COLOR = '#6C3FB5';
+const MULTA_BG = 'rgba(108,63,181,0.1)';
+
 // Tarefas agrupadas por nome
 const tarefasAgrupadas = [
   { name: 'DCTF Ago/25', tipo: 'Mensal', total: 48, abertas: 8, abertasAtraso: 4, abertasMulta: 2, concluidas: 40, concluidasAtraso: 2, concluidasMulta: 2, progresso: 83, atraso: 6, multa: 4 },
@@ -998,16 +1002,25 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                 </tr>
               </thead>
               <tbody>
-                {responsaveis.map((r) => {
+                {responsaveis.map((r, idx) => {
                   const pct = Math.round((r.concluidas / r.total) * 100);
                   const pctColor = pct >= 90 ? 'var(--chart-1)' : pct >= 50 ? 'var(--chart-3)' : 'var(--chart-4)';
 
+                  // Helper function to render badge or dash
+                  const renderBadgeOrDash = (value: number, color: string, bg: string) => {
+                    return value > 0 ? (
+                      <BadgeCount value={value} color={color} bg={bg} />
+                    ) : (
+                      <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                    );
+                  };
+
                   return (
-                    <tr key={r.name} style={{ borderBottom: '1px solid var(--border)' }}>
+                    <tr key={`responsavel-${idx}`} style={{ borderBottom: '1px solid var(--border)' }} className="hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => navigateTarefas('lista')}>
                       {/* Funcionário */}
                       <td className="py-2 pr-2">
                         <div className="flex items-center gap-2">
-                          <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: avatarColors[responsaveis.indexOf(r) % avatarColors.length], color: 'white', fontSize: '10px', fontWeight: 600 }}>
+                          <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: avatarColors[idx % avatarColors.length], color: 'white', fontSize: '10px', fontWeight: 600 }}>
                             {r.initials}
                           </div>
                           <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{r.name}</span>
@@ -1019,20 +1032,12 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
 
                       {/* Abertas em atraso */}
                       <td className="py-2 pr-2">
-                        {r.abertasAtraso > 0 ? (
-                          <BadgeCount value={r.abertasAtraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" />
-                        ) : (
-                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
-                        )}
+                        {renderBadgeOrDash(r.abertasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
                       </td>
 
                       {/* Abertas com multa */}
                       <td className="py-2 pr-2">
-                        {r.abertasMulta > 0 ? (
-                          <BadgeCount value={r.abertasMulta} color="#6C3FB5" bg="rgba(108,63,181,0.1)" />
-                        ) : (
-                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
-                        )}
+                        {renderBadgeOrDash(r.abertasMulta, MULTA_COLOR, MULTA_BG)}
                       </td>
 
                       {/* Concluídas total */}
@@ -1040,20 +1045,12 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
 
                       {/* Concluídas em atraso */}
                       <td className="py-2 pr-2">
-                        {r.concluidasAtraso > 0 ? (
-                          <BadgeCount value={r.concluidasAtraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" />
-                        ) : (
-                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
-                        )}
+                        {renderBadgeOrDash(r.concluidasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
                       </td>
 
                       {/* Concluídas com multa */}
                       <td className="py-2 pr-2">
-                        {r.concluidasMulta > 0 ? (
-                          <BadgeCount value={r.concluidasMulta} color="#6C3FB5" bg="rgba(108,63,181,0.1)" />
-                        ) : (
-                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
-                        )}
+                        {renderBadgeOrDash(r.concluidasMulta, MULTA_COLOR, MULTA_BG)}
                       </td>
 
                       {/* Percentage */}
@@ -1090,7 +1087,7 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                     <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.name}</td>
                     <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.abertas}</td>
                     <td className="py-2 pr-2"><BadgeCount value={d.atraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" /></td>
-                    <td className="py-2 pr-2"><BadgeCount value={d.multa} color="#6C3FB5" bg="rgba(108,63,181,0.1)" /></td>
+                    <td className="py-2 pr-2"><BadgeCount value={d.multa} color={MULTA_COLOR} bg={MULTA_BG} /></td>
                     <td className="py-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)', fontWeight: 'var(--font-weight-semibold)' }}>{d.total.toLocaleString('pt-BR')}</td>
                   </tr>
                 ))}
