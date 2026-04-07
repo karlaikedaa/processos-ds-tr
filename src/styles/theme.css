@@ -1,3 +1,11 @@
+/**
+ * Theme CSS Variables - Synchronized with Figma Design System
+ * Source: https://www.figma.com/design/Q2p5d5mIahsEPxXYMOA16V/Dom-DS-Core-Web
+ *
+ * These values match src/design-system/tokens.ts
+ * Updates should come via: npm run sync-design-tokens
+ */
+
 @custom-variant dark (&:is(.dark *));
 
 :root {
