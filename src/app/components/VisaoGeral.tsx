@@ -1074,23 +1074,74 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
             </button>
           </div>
           <div className="overflow-x-auto">
-            <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '280px' }}>
-              <thead><tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Departamentos', 'Abertas', 'Atraso', 'Com multa', 'Total'].map(h => (
-                  <th key={h} className="text-left pb-2 pr-2 last:pr-0"
-                    style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>{h}</th>
-                ))}
-              </tr></thead>
+            <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '300px' }}>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Departamentos</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas<br/>total</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas<br/>em atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas<br/>com multa</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>total</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>em atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>com multa</th>
+                  <th className="text-left pb-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>%</th>
+                </tr>
+              </thead>
               <tbody>
-                {departamentos.map((d) => (
-                  <tr key={d.name} style={{ borderBottom: '1px solid var(--border)' }} className="hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => navigateTarefas('lista')}>
-                    <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.name}</td>
-                    <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.abertas}</td>
-                    <td className="py-2 pr-2"><BadgeCount value={d.atraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" /></td>
-                    <td className="py-2 pr-2"><BadgeCount value={d.multa} color={MULTA_COLOR} bg={MULTA_BG} /></td>
-                    <td className="py-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)', fontWeight: 'var(--font-weight-semibold)' }}>{d.total.toLocaleString('pt-BR')}</td>
-                  </tr>
-                ))}
+                {departamentos.map((d, idx) => {
+                  const pct = Math.round((d.concluidas / d.total) * 100);
+                  const pctColor = pct >= 90 ? 'var(--chart-1)' : pct >= 50 ? 'var(--chart-3)' : 'var(--chart-4)';
+
+                  // Helper function to render badge or dash
+                  const renderBadgeOrDash = (value: number, color: string, bg: string) => {
+                    return value > 0 ? (
+                      <BadgeCount value={value} color={color} bg={bg} />
+                    ) : (
+                      <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                    );
+                  };
+
+                  return (
+                    <tr
+                      key={`departamento-${idx}`}
+                      onClick={() => navigateTarefas('lista')}
+                      className="hover:bg-muted/20 transition-colors cursor-pointer"
+                      style={{ borderBottom: '1px solid var(--border)' }}
+                    >
+                      {/* Departamento (no avatar) */}
+                      <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.name}</td>
+
+                      {/* Abertas total */}
+                      <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.abertas}</td>
+
+                      {/* Abertas em atraso */}
+                      <td className="py-2 pr-2">
+                        {renderBadgeOrDash(d.abertasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
+                      </td>
+
+                      {/* Abertas com multa */}
+                      <td className="py-2 pr-2">
+                        {renderBadgeOrDash(d.abertasMulta, MULTA_COLOR, MULTA_BG)}
+                      </td>
+
+                      {/* Concluídas total */}
+                      <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.concluidas}</td>
+
+                      {/* Concluídas em atraso */}
+                      <td className="py-2 pr-2">
+                        {renderBadgeOrDash(d.concluidasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
+                      </td>
+
+                      {/* Concluídas com multa */}
+                      <td className="py-2 pr-2">
+                        {renderBadgeOrDash(d.concluidasMulta, MULTA_COLOR, MULTA_BG)}
+                      </td>
+
+                      {/* Percentage */}
+                      <td className="py-2" style={{ fontSize: 'var(--text-caption)', color: pctColor, fontWeight: 'var(--font-weight-semibold)' }}>{pct}%</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
