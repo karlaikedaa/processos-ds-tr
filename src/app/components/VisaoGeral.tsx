@@ -1148,7 +1148,7 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
         {/* Tarefas por status */}
         <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
           <div className="flex items-center justify-between mb-3">
-            <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>Tarefas por status</p>
+            <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>Tarefas</p>
             <button onClick={() => openLista('empresas')}
               className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity"
               style={{ fontSize: 'var(--text-caption)', color: 'var(--primary)', background: 'none', padding: 0, border: 'none' }}>
