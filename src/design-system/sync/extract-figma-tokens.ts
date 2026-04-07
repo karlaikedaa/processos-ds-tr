@@ -138,11 +138,12 @@ export type Tokens = typeof tokens
   return content
 }
 
-// CLI execution
-if (import.meta.url === \`file://\${process.argv[1]}\`) {
-  generateTokensFile().then(content => {
-    console.log(content)
-  })
-}
-
 export { extractTokensFromFigma, generateTokensFile }
+
+// CLI execution
+generateTokensFile().then(content => {
+  console.log(content)
+}).catch(err => {
+  console.error('Error generating tokens:', err)
+  process.exit(1)
+})
