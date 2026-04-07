@@ -813,21 +813,35 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
           </div>
         </div>
 
-        {/* Card 3: 150 a concluir hoje */}
+        {/* Card 3: Tarefas sujeitas à multa */}
         <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
+          {/* Small title */}
+          <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', marginBottom: '8px' }}>Tarefas sujeitas à multa</p>
+
+          {/* Main title */}
           <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>150 a concluir hoje</p>
+
+          {/* Progress bar */}
+          <div className="mb-3">
+            <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', marginBottom: '4px' }}>Próximos 5 dias 200 de 400</p>
+            <div className="w-full rounded-full overflow-hidden" style={{ height: '8px', background: 'var(--muted)' }}>
+              <div style={{ width: '50%', height: '100%', background: 'var(--chart-4)', borderRadius: '999px' }} />
+            </div>
+          </div>
+
+          {/* Bullet list */}
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-2)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>A concluir sem atraso</span>
-            </div>
-            <div className="flex items-center gap-2">
               <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-3)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Concluída - arquivos não baixados (hoje)</span>
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>A concluir (em 5 dias)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-1)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Concluída - arquivos não baixados (em 5 dias)</span>
+              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--destructive)' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Concluídas - arquivos não baixados (hoje)</span>
+            </div>
+            <div className="flex items-center gap-2">
+              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-2)' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Concluídas - arquivos não baixados (em 5 dias)</span>
             </div>
           </div>
         </div>
