@@ -985,27 +985,82 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
           </div>
           <div className="overflow-x-auto">
             <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '300px' }}>
-              <thead><tr style={{ borderBottom: '1px solid var(--border)' }}>
-                {['Funcionário', 'Abertas', 'Atraso', 'Com multa', 'Total'].map(h => (
-                  <th key={h} className="text-left pb-2 pr-2 last:pr-0"
-                    style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>{h}</th>
-                ))}
-              </tr></thead>
+              <thead>
+                <tr style={{ borderBottom: '1px solid var(--border)' }}>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Funcionário</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas<br/>total</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas<br/>em atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas<br/>com multa</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>total</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>em atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>com multa</th>
+                  <th className="text-left pb-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>%</th>
+                </tr>
+              </thead>
               <tbody>
-                {responsaveis.map((r, idx) => (
-                  <tr key={r.initials} style={{ borderBottom: '1px solid var(--border)' }} className="hover:bg-muted/20 transition-colors cursor-pointer" onClick={() => navigateTarefas('lista')}>
-                    <td className="py-2 pr-2">
-                      <div className="flex items-center gap-2">
-                        <Avatar initials={r.initials} idx={idx} />
-                        <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }} className="truncate max-w-[90px]">{r.name}</span>
-                      </div>
-                    </td>
-                    <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{r.abertas}</td>
-                    <td className="py-2 pr-2"><BadgeCount value={r.atraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" /></td>
-                    <td className="py-2 pr-2"><BadgeCount value={r.multa} color="#6C3FB5" bg="rgba(108,63,181,0.1)" /></td>
-                    <td className="py-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)', fontWeight: 'var(--font-weight-semibold)' }}>{r.total.toLocaleString('pt-BR')}</td>
-                  </tr>
-                ))}
+                {responsaveis.map((r) => {
+                  const pct = Math.round((r.concluidas / r.total) * 100);
+                  const pctColor = pct >= 90 ? 'var(--chart-1)' : pct >= 50 ? 'var(--chart-3)' : 'var(--chart-4)';
+
+                  return (
+                    <tr key={r.name} style={{ borderBottom: '1px solid var(--border)' }}>
+                      {/* Funcionário */}
+                      <td className="py-2 pr-2">
+                        <div className="flex items-center gap-2">
+                          <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: avatarColors[responsaveis.indexOf(r) % avatarColors.length], color: 'white', fontSize: '10px', fontWeight: 600 }}>
+                            {r.initials}
+                          </div>
+                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{r.name}</span>
+                        </div>
+                      </td>
+
+                      {/* Abertas total */}
+                      <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{r.abertas}</td>
+
+                      {/* Abertas em atraso */}
+                      <td className="py-2 pr-2">
+                        {r.abertasAtraso > 0 ? (
+                          <BadgeCount value={r.abertasAtraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" />
+                        ) : (
+                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                        )}
+                      </td>
+
+                      {/* Abertas com multa */}
+                      <td className="py-2 pr-2">
+                        {r.abertasMulta > 0 ? (
+                          <BadgeCount value={r.abertasMulta} color="#6C3FB5" bg="rgba(108,63,181,0.1)" />
+                        ) : (
+                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                        )}
+                      </td>
+
+                      {/* Concluídas total */}
+                      <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{r.concluidas}</td>
+
+                      {/* Concluídas em atraso */}
+                      <td className="py-2 pr-2">
+                        {r.concluidasAtraso > 0 ? (
+                          <BadgeCount value={r.concluidasAtraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" />
+                        ) : (
+                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                        )}
+                      </td>
+
+                      {/* Concluídas com multa */}
+                      <td className="py-2 pr-2">
+                        {r.concluidasMulta > 0 ? (
+                          <BadgeCount value={r.concluidasMulta} color="#6C3FB5" bg="rgba(108,63,181,0.1)" />
+                        ) : (
+                          <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                        )}
+                      </td>
+
+                      {/* Percentage */}
+                      <td className="py-2" style={{ fontSize: 'var(--text-caption)', color: pctColor, fontWeight: 'var(--font-weight-semibold)' }}>{pct}%</td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
