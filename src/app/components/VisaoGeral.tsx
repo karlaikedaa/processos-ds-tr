@@ -792,18 +792,23 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
           </div>
         </div>
 
-        {/* Card 2: 120 tarefas abertas com documentos pendentes */}
+        {/* Card 2: Cobrança de documentos */}
         <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '8px' }}>120 tarefas abertas com</p>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>documentos pendentes</p>
+          {/* Small title */}
+          <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', marginBottom: '8px' }}>Cobrança de documentos</p>
+
+          {/* Main title */}
+          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>120 tarefas abertas com documentos pendentes</p>
+
+          {/* Bullet list */}
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-4)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>210 tarefas abertas com docs pendentes</span>
+              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-1)' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>210 tarefas abertas com documentos enviados</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-4)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>148 tarefas com usuários do cliente não vinculados</span>
+              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--destructive)' }} />
+              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>148 Tarefas sem usuários de clientes vinculados</span>
             </div>
           </div>
         </div>
