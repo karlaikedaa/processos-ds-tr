@@ -8,6 +8,8 @@ import {
 } from 'lucide-react';
 import { ListasDetalhadas, ListaTab } from './ListasDetalhadas';
 import AlertBanner from '../../imports/AlertBanner';
+import { Card, CardContent, CardHeader, CardTitle } from './ui/card';
+import { Badge } from './ui/badge';
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -24,15 +26,24 @@ interface VisaoGeralProps {
 
 // ─── Mock Data ───────────────────────────────────────────────────────────────
 
+// PRD 4.5 - Resumo de Tarefas (Gráfico Donut)
 const donutData = [
-  { name: 'Concluídas',                              value: 899, pct: 55, color: 'var(--chart-1)', filterStatus: 'Concluída' },
-  { name: 'Com impedimento',                         value: 38,  pct: 2,  color: 'var(--chart-4)', filterStatus: 'Impedida' },
-  { name: 'Abertas c/ doc. cobrados pendentes',      value: 210, pct: 13, color: 'var(--chart-3)', filterStatus: 'Aberta' },
-  { name: 'Abertas c/ doc. cobrados enviados',       value: 347, pct: 21, color: 'var(--chart-2)', filterStatus: 'Em andamento' },
-  { name: 'Sem usuário de cliente vinculado',        value: 148, pct: 9,  color: 'var(--chart-5)', filterStatus: 'Desconsiderada' },
+  { name: 'Atrasadas',              value: 210, pct: 13, color: 'var(--destructive)',  filterStatus: 'Atrasada' },
+  { name: 'Desconsideradas',        value: 148, pct: 9,  color: 'var(--muted)',        filterStatus: 'Desconsiderada' },
+  { name: 'Em andamento',           value: 347, pct: 21, color: 'var(--chart-3)',      filterStatus: 'Em andamento' },
+  { name: 'Aguardando aprovação',   value: 125, pct: 8,  color: '#8B5CF6',            filterStatus: 'Aguardando aprovação' },
+  { name: 'Com impedimento',        value: 38,  pct: 2,  color: '#1E40AF',            filterStatus: 'Impedida' },
+  { name: 'Concluídas',             value: 899, pct: 55, color: 'var(--chart-1)',      filterStatus: 'Concluída' },
 ];
 
 const metaDentroTotal = 1246;
+
+// PRD 4.2 - KPIs Header
+const kpiData = {
+  vencendoHoje: 800,
+  concluidasParcial: 2000,
+  concluidasTotal: 2800
+};
 
 const empresas = [
   { name: 'Empresa ABC Ltda', total: 48, abertas: 48, atraso: 2, multa: 2, progresso: 83 },
@@ -674,55 +685,54 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
         </div>
       </div>
 
-      {/* ── Tarefas bar ──────────────────────────────────────── */}
-      <div className="bg-white rounded-lg p-4 flex flex-col sm:flex-row items-start sm:items-center gap-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-        {/* Big number — vencendo hoje */}
-        <button
-          onClick={() => openTaskDrawer('Tarefas vencendo hoje', mockTasksVencendoHoje, '10/03/2026 · Data legal')}
-          className="flex items-center gap-3 shrink-0 cursor-pointer hover:opacity-80 transition-opacity text-left"
-          style={{ background: 'none', border: 'none', padding: 0 }}
-        >
-          <div className="w-9 h-9 rounded-md flex items-center justify-center" style={{ background: 'rgba(21,115,211,0.1)' }}>
-            <ListTodo size={17} style={{ color: 'var(--chart-2)' }} />
-          </div>
-          <div>
-            <p style={{ fontSize: '26px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--chart-2)', lineHeight: 1 }}>2.800</p>
-            <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>Tarefas vencendo hoje</p>
-          </div>
-        </button>
-
-        <div className="hidden sm:block w-px self-stretch" style={{ background: 'var(--border)' }} />
-        <div className="sm:hidden h-px w-full" style={{ background: 'var(--border)' }} />
-
-        {/* Concluídas */}
-        <div className="shrink-0">
+      {/* PRD 4.2 — Bloco: Indicadores de Tarefas (Header de KPIs) */}
+      <Card className="p-4">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+          {/* Tarefas vencendo hoje - KPI principal */}
           <button
-            onClick={() => openTaskDrawer('Tarefas concluídas', mockTasksConcluidas, '1.700 concluídas hoje')}
-            className="cursor-pointer text-left"
-            style={{ background: 'none', border: 'none', padding: 0 }}>
-            <p style={{ fontSize: '20px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', lineHeight: 1 }}>1.700</p>
-            <span style={{ fontSize: 'var(--text-caption)', color: 'var(--chart-1)', textDecoration: 'underline' }}>Tarefas concluídas</span>
+            onClick={() => openTaskDrawer('Tarefas vencendo hoje', mockTasksVencendoHoje, 'Priorize sua equipe')}
+            className="flex items-center gap-3 shrink-0 cursor-pointer hover:opacity-80 transition-opacity text-left bg-transparent border-none p-0"
+          >
+            <div className="w-9 h-9 rounded-md flex items-center justify-center bg-[rgba(21,115,211,0.1)]">
+              <Clock size={17} className="text-[var(--chart-2)]" />
+            </div>
+            <div>
+              <p className="text-[32px] font-semibold text-[var(--chart-2)] leading-none">{kpiData.vencendoHoje}</p>
+              <p className="text-caption text-muted-foreground">Tarefas vencendo hoje</p>
+            </div>
           </button>
-        </div>
 
-        {/* Progress bar */}
-        <div className="flex-1 w-full min-w-0">
-          <div className="w-full rounded-full overflow-hidden" style={{ height: '8px', background: 'var(--muted)' }}>
-            <div style={{ width: '60.7%', height: '100%', background: 'var(--chart-1)', borderRadius: '999px' }} />
+          <div className="hidden sm:block w-px self-stretch bg-border" />
+          <div className="sm:hidden h-px w-full bg-border" />
+
+          {/* Tarefas concluídas (parcial) */}
+          <div className="shrink-0">
+            <button
+              onClick={() => openTaskDrawer('Tarefas concluídas', mockTasksConcluidas, `${kpiData.concluidasParcial} concluídas hoje`)}
+              className="cursor-pointer text-left bg-transparent border-none p-0"
+            >
+              <p className="text-xl font-semibold text-foreground leading-none">{kpiData.concluidasParcial.toLocaleString('pt-BR')}</p>
+              <span className="text-caption text-[var(--chart-1)] underline">Tarefas concluídas</span>
+            </button>
+          </div>
+
+          {/* Progress bar - parcial de total */}
+          <div className="flex-1 w-full min-w-0">
+            <div className="w-full h-2 rounded-full overflow-hidden bg-muted">
+              <div
+                className="h-full bg-[var(--chart-1)] rounded-full transition-all"
+                style={{ width: `${(kpiData.concluidasParcial / kpiData.concluidasTotal) * 100}%` }}
+              />
+            </div>
+          </div>
+
+          {/* Tarefas concluídas (total geral) */}
+          <div className="shrink-0">
+            <p className="text-xl font-semibold text-foreground leading-none">{kpiData.concluidasTotal.toLocaleString('pt-BR')}</p>
+            <span className="text-caption text-muted-foreground">Meta total</span>
           </div>
         </div>
-
-        {/* Tarefas abertas (era "data meta hoje") */}
-        <div className="shrink-0">
-          <button
-            onClick={() => openTaskDrawer('Tarefas abertas', mockTasksAbertas, '1.700 tarefas com data meta hoje')}
-            className="cursor-pointer text-left"
-            style={{ background: 'none', border: 'none', padding: 0 }}>
-            <p style={{ fontSize: '20px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', lineHeight: 1 }}>1.700</p>
-            <span style={{ fontSize: 'var(--text-caption)', color: 'var(--chart-2)', textDecoration: 'underline' }}>Tarefas abertas</span>
-          </button>
-        </div>
-      </div>
+      </Card>
 
       {/* ── Alert Banners ────────────────────────────────────── */}
       {alert1 && (
@@ -733,92 +743,108 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
       )}
 
       {alert2 && (
-        <div className="flex items-start gap-3 rounded-lg px-4 py-3"
-          style={{ background: 'rgba(254,166,1,0.07)', border: '1px solid rgba(254,166,1,0.25)' }}>
-          <AlertTriangle size={15} style={{ color: 'var(--chart-3)', marginTop: '2px', flexShrink: 0 }} />
+        <div className="flex items-start gap-3 rounded-lg px-4 py-3 bg-warning/5 border border-warning/25">
+          <AlertTriangle size={15} className="text-warning mt-0.5 shrink-0" />
           <div className="flex-1 min-w-0">
-            <p style={{ fontSize: 'var(--text-label)', color: 'var(--foreground)', fontWeight: 'var(--font-weight-semibold)' }}>
+            <p className="text-label text-foreground font-semibold">
               07 configurações não realizadas
             </p>
-            <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', marginTop: '2px' }}>
+            <p className="text-caption text-muted-foreground mt-0.5">
               Funcionários inativos com tarefas (7); Tarefas sem responsáveis (3); Documentos sem pasta de destino (2)
             </p>
           </div>
           <button
             onClick={() => setConfigDrawerOpen(true)}
-            className="flex items-center gap-1 px-3 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity shrink-0"
-            style={{ background: 'rgba(254,166,1,0.12)', fontSize: 'var(--text-caption)', color: '#9a6a00', fontWeight: 'var(--font-weight-semibold)', border: 'none' }}>
+            className="flex items-center gap-1 px-3 py-1 rounded cursor-pointer hover:opacity-80 transition-opacity shrink-0 bg-warning/10 text-caption text-[#9a6a00] font-semibold border-none"
+          >
             Abrir detalhes <ChevronRight size={11} />
           </button>
-          <button onClick={() => setAlert2(false)} className="w-6 h-6 flex items-center justify-center rounded cursor-pointer hover:bg-muted/40 shrink-0"
-            style={{ background: 'none', border: 'none' }}>
-            <X size={13} style={{ color: 'var(--muted-foreground)' }} />
+          <button
+            onClick={() => setAlert2(false)}
+            className="w-6 h-6 flex items-center justify-center rounded cursor-pointer hover:bg-muted/40 shrink-0 bg-transparent border-none"
+          >
+            <X size={13} className="text-muted-foreground" />
           </button>
         </div>
       )}
 
       {/* ── 3 Cards Principais ────────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Card 1: 4 pontos de atenção */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>4 pontos de atenção</p>
+        {/* PRD 4.4 Card 1 – Tarefas Abertas / Pontos de Atenção */}
+        <Card className="p-4">
+          <div className="flex items-center justify-between mb-2">
+            <p className="text-label font-semibold text-foreground">4 pontos de atenção</p>
+            <span className="text-caption text-muted-foreground">Concluídas 50 de 58</span>
+          </div>
+          {/* Progress bar */}
+          <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted mb-3">
+            <div className="h-full bg-[var(--chart-3)] rounded-full" style={{ width: '86%' }} />
+          </div>
           <div className="space-y-2.5">
             <div className="flex items-start gap-2">
-              <span style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>1</span>
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Tarefas gerando multa</span>
+              <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: '#8B5CF6' }} />
+              <span className="text-caption text-foreground">Tarefas gerando multa</span>
             </div>
             <div className="flex items-start gap-2">
-              <span style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>2</span>
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Tarefas atrasadas</span>
+              <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--destructive)' }} />
+              <span className="text-caption text-foreground">Tarefas atrasadas</span>
             </div>
             <div className="flex items-start gap-2">
-              <span style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>3</span>
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Tarefas aguardando aprovação</span>
+              <div className="w-1.5 h-1.5 rounded-full mt-1.5 shrink-0" style={{ background: 'var(--chart-2)' }} />
+              <span className="text-caption text-foreground">Tarefas aguardando aprovação</span>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Card 2: 120 tarefas abertas com documentos pendentes */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '8px' }}>120 tarefas abertas com</p>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>documentos pendentes</p>
+        <Card className="p-4">
+          <p className="text-label font-semibold text-foreground mb-2">120 tarefas abertas com</p>
+          <p className="text-label font-semibold text-foreground mb-3">documentos pendentes</p>
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-4)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>210 tarefas abertas com docs pendentes</span>
+              <div className="w-2 h-2 rounded-full bg-[var(--chart-4)]" />
+              <span className="text-caption text-foreground">210 tarefas abertas com docs pendentes</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-4)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>148 tarefas com usuários do cliente não vinculados</span>
+              <div className="w-2 h-2 rounded-full bg-[var(--chart-4)]" />
+              <span className="text-caption text-foreground">148 tarefas com usuários do cliente não vinculados</span>
             </div>
           </div>
-        </div>
+        </Card>
 
-        {/* Card 3: 150 a concluir hoje */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>150 a concluir hoje</p>
+        {/* PRD 4.4 Card 3 – Tarefas Sujeitas a Multa */}
+        <Card className="p-4">
+          <p className="text-label font-semibold text-foreground mb-1">150 a concluir hoje</p>
+          <div className="flex items-center justify-between mb-2">
+            <span className="text-caption text-muted-foreground">Próximos 5 dias</span>
+            <span className="text-caption text-muted-foreground">200 de 400</span>
+          </div>
+          {/* Progress bar */}
+          <div className="w-full h-1.5 rounded-full overflow-hidden bg-muted mb-3">
+            <div className="h-full bg-[var(--chart-3)] rounded-full" style={{ width: '50%' }} />
+          </div>
           <div className="space-y-1.5">
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-2)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>A concluir sem atraso</span>
+              <div className="w-2 h-2 rounded-full bg-[var(--chart-3)]" />
+              <span className="text-caption text-foreground">A concluir (em 5 dias)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-3)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Concluída - arquivos não baixados (hoje)</span>
+              <div className="w-2 h-2 rounded-full bg-[var(--destructive)]" />
+              <span className="text-caption text-foreground">Concluídas - arquivos não baixados (hoje)</span>
             </div>
             <div className="flex items-center gap-2">
-              <div className="w-2 h-2 rounded-full" style={{ background: 'var(--chart-1)' }} />
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>Concluída - arquivos não baixados (em 5 dias)</span>
+              <div className="w-2 h-2 rounded-full bg-[var(--chart-2)]" />
+              <span className="text-caption text-foreground">Concluídas - arquivos não baixados (em 5 dias)</span>
             </div>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* ── Resumo + Ações Rápidas + Sem Tarefas ───────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Resumo de tarefas (Donut) */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>Resumo de tarefas</p>
+        <Card className="p-4">
+          <p className="text-label font-semibold text-foreground mb-3">Resumo de tarefas</p>
           <div className="flex flex-col sm:flex-row items-center gap-4">
             <div className="shrink-0">
               <PieChart width={160} height={160}>
@@ -839,33 +865,28 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                         ev.stopPropagation();
                         setExpandedStatus(isExpanded ? null : d.name);
                       }}
-                      className="flex items-center justify-between gap-2 w-full px-2 py-1 rounded-md transition-colors hover:bg-muted/40 cursor-pointer text-left"
-                      style={{ background: 'none', border: 'none' }}
+                      className="flex items-center justify-between gap-2 w-full px-2 py-1 rounded-md transition-colors hover:bg-muted/40 cursor-pointer text-left bg-transparent border-none"
                     >
                       <div className="flex items-center gap-2 min-w-0">
-                        <ChevronRight 
-                          size={10} 
-                          style={{ 
-                            color: 'var(--muted-foreground)', 
-                            transform: isExpanded ? 'rotate(90deg)' : 'none',
-                            transition: 'transform 0.2s',
-                            flexShrink: 0
-                          }} 
+                        <ChevronRight
+                          size={10}
+                          className="text-muted-foreground shrink-0 transition-transform duration-200"
+                          style={{ transform: isExpanded ? 'rotate(90deg)' : 'none' }}
                         />
                         <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: d.color }} />
-                        <span className="truncate" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{d.name}</span>
+                        <span className="truncate text-caption text-foreground">{d.name}</span>
                       </div>
                       <div className="flex items-center gap-2 shrink-0">
-                        <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>{d.pct}%</span>
-                        <span style={{ fontSize: 'var(--text-caption)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', minWidth: '32px', textAlign: 'right' }}>
+                        <span className="text-caption text-muted-foreground">{d.pct}%</span>
+                        <span className="text-caption font-semibold text-foreground min-w-[32px] text-right">
                           {d.value.toLocaleString('pt-BR')}
                         </span>
                       </div>
                     </button>
                     {isExpanded && tarefasForStatus.length > 0 && (
-                      <div className="ml-6 mt-1 mb-2 space-y-1 p-2 rounded-md" style={{ background: 'var(--input-background)', border: '1px solid var(--border)' }}>
+                      <div className="ml-6 mt-1 mb-2 space-y-1 p-2 rounded-md bg-input border border-border">
                         {tarefasForStatus.map((tarefa, idx) => (
-                          <div 
+                          <div
                             key={idx}
                             onClick={(ev) => {
                               ev.stopPropagation();
@@ -875,10 +896,10 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                           >
                             <div className="flex-1 min-w-0">
                               <div className="flex items-center gap-1.5">
-                                <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>{tarefa.id}</span>
-                                <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)', fontWeight: 'var(--font-weight-semibold)' }}>{tarefa.nome}</span>
+                                <span className="text-caption text-muted-foreground">{tarefa.id}</span>
+                                <span className="text-caption text-foreground font-semibold">{tarefa.nome}</span>
                               </div>
-                              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', display: 'block', marginTop: '2px' }}>{tarefa.empresa}</span>
+                              <span className="text-caption text-muted-foreground block mt-0.5">{tarefa.empresa}</span>
                             </div>
                             <StatusBadge status={tarefa.status} />
                           </div>
@@ -888,65 +909,62 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                   </div>
                 );
               })}
-              <div className="flex items-center justify-between gap-2 mt-1 rounded-md px-2 py-1.5"
-                style={{ background: 'rgba(56,124,43,0.08)', border: '1px solid rgba(56,124,43,0.2)' }}>
+              <div className="flex items-center justify-between gap-2 mt-1 rounded-md px-2 py-1.5 bg-success/10 border border-success/20">
                 <div className="flex items-center gap-2 min-w-0">
-                  <div className="w-2.5 h-2.5 rounded-full shrink-0" style={{ background: 'var(--chart-1)' }} />
-                  <span style={{ fontSize: 'var(--text-caption)', color: 'var(--chart-1)', fontWeight: 'var(--font-weight-semibold)' }}>Total dentro da meta</span>
+                  <div className="w-2.5 h-2.5 rounded-full shrink-0 bg-[var(--chart-1)]" />
+                  <span className="text-caption text-[var(--chart-1)] font-semibold">Total dentro da meta</span>
                 </div>
-                <span style={{ fontSize: 'var(--text-caption)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--chart-1)', minWidth: '32px', textAlign: 'right' }}>
+                <span className="text-caption font-semibold text-[var(--chart-1)] min-w-[32px] text-right">
                   {metaDentroTotal.toLocaleString('pt-BR')}
                 </span>
               </div>
             </div>
           </div>
-        </div>
+        </Card>
 
         {/* Ações rápidas */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>Ações rápidas</p>
+        <Card className="p-4">
+          <p className="text-label font-semibold text-foreground mb-3">Ações rápidas</p>
           <div className="grid grid-cols-2 gap-3">
             {[
-              { icon: <FileText size={18} style={{ color: 'var(--primary)' }} />,    label: 'Listas detalhadas',   bg: 'rgba(214,64,0,0.08)',    action: () => openLista('departamentos') },
-              { icon: <Calendar size={18} style={{ color: 'var(--chart-5)' }} />,    label: 'Calendário', bg: 'rgba(238,80,5,0.08)',  action: () => navigateTarefas('calendario') },
-              { icon: <LayoutGrid size={18} style={{ color: 'var(--chart-2)' }} />,  label: 'Kanban',              bg: 'rgba(21,115,211,0.08)',  action: () => navigateTarefas('kanban') },
-              { icon: <List size={18} style={{ color: 'var(--chart-3)' }} />,        label: 'Lista',    bg: 'rgba(254,166,1,0.08)',   action: () => navigateTarefas('lista') },
-              { icon: <Share2 size={18} style={{ color: 'var(--chart-4)' }} />,      label: 'Fluxo',   bg: 'rgba(220,10,10,0.08)',   action: () => navigateTarefas('fluxo') },
-              { icon: <ListChecks size={18} style={{ color: 'var(--chart-1)' }} />,  label: 'Tarefas',   bg: 'rgba(56,124,43,0.08)',   action: () => navigateTarefas('lista') },
+              { icon: <FileText size={18} className="text-primary" />,    label: 'Listas detalhadas',   bg: 'bg-primary/10',    action: () => openLista('departamentos') },
+              { icon: <Calendar size={18} className="text-[var(--chart-5)]" />,    label: 'Calendário', bg: 'bg-[rgba(238,80,5,0.08)]',  action: () => navigateTarefas('calendario') },
+              { icon: <LayoutGrid size={18} className="text-[var(--chart-2)]" />,  label: 'Kanban',              bg: 'bg-[rgba(21,115,211,0.08)]',  action: () => navigateTarefas('kanban') },
+              { icon: <List size={18} className="text-[var(--chart-3)]" />,        label: 'Lista',    bg: 'bg-warning/10',   action: () => navigateTarefas('lista') },
+              { icon: <Share2 size={18} className="text-destructive" />,      label: 'Fluxo',   bg: 'bg-destructive/10',   action: () => navigateTarefas('fluxo') },
+              { icon: <ListChecks size={18} className="text-success" />,  label: 'Tarefas',   bg: 'bg-success/10',   action: () => navigateTarefas('lista') },
             ].map((item, i) => (
               <button
                 key={i}
                 onClick={item.action}
-                className="flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/20 transition-colors rounded-lg p-3"
-                style={{ border: '1px solid var(--border)', background: 'white' }}
+                className="flex flex-col items-center justify-center gap-2 cursor-pointer hover:bg-muted/20 transition-colors rounded-lg p-3 border border-border bg-white"
               >
-                <div className="w-9 h-9 rounded-lg flex items-center justify-center" style={{ background: item.bg }}>
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center ${item.bg}`}>
                   {item.icon}
                 </div>
-                <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)', textAlign: 'center', lineHeight: 1.2 }}>{item.label}</span>
+                <span className="text-caption text-foreground text-center leading-tight">{item.label}</span>
               </button>
             ))}
           </div>
-        </div>
+        </Card>
 
         {/* Sem tarefas atribuídas */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
-          <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', marginBottom: '12px' }}>Sem tarefas atribuídas</p>
+        <Card className="p-4">
+          <p className="text-label font-semibold text-foreground mb-3">Sem tarefas atribuídas</p>
           <div className="space-y-3">
-            <p style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>Nenhuma tarefa sem responsável encontrada no momento.</p>
+            <p className="text-caption text-muted-foreground">Nenhuma tarefa sem responsável encontrada no momento.</p>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* ── Performance tables ───────────────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Responsável */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
+        <Card className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>Desempenho por responsável</p>
+            <p className="text-label font-semibold text-foreground">Desempenho por responsável</p>
             <button onClick={() => openLista('funcionarios')}
-              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity"
-              style={{ fontSize: 'var(--text-caption)', color: 'var(--primary)', background: 'none', padding: 0, border: 'none' }}>
+              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity text-caption text-primary bg-transparent p-0 border-none">
               Ver todos <ChevronRight size={11} />
             </button>
           </div>
@@ -976,15 +994,14 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
 
         {/* Departamento */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
+        <Card className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>Desempenho por departamento</p>
+            <p className="text-label font-semibold text-foreground">Desempenho por departamento</p>
             <button onClick={() => openLista('departamentos')}
-              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity"
-              style={{ fontSize: 'var(--text-caption)', color: 'var(--primary)', background: 'none', padding: 0, border: 'none' }}>
+              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity text-caption text-primary bg-transparent p-0 border-none">
               Ver todos <ChevronRight size={11} />
             </button>
           </div>
@@ -1009,7 +1026,7 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* ── KPI Row 1 ─────────────────────────────────────────── */}
@@ -1057,12 +1074,11 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
       {/* ── Tarefas por empresa e status ───────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tarefas por empresa */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
+        <Card className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>Tarefas por empresa</p>
+            <p className="text-label font-semibold text-foreground">Tarefas por empresa</p>
             <button onClick={() => openLista('empresas')}
-              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity"
-              style={{ fontSize: 'var(--text-caption)', color: 'var(--primary)', background: 'none', padding: 0, border: 'none' }}>
+              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity text-caption text-primary bg-transparent p-0 border-none">
               Ver todos <ChevronRight size={11} />
             </button>
           </div>
@@ -1143,15 +1159,14 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
 
         {/* Tarefas por status */}
-        <div className="bg-white rounded-lg p-4" style={{ boxShadow: 'var(--elevation-sm)' }}>
+        <Card className="p-4">
           <div className="flex items-center justify-between mb-3">
-            <p style={{ fontSize: 'var(--text-label)', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)' }}>Tarefas por status</p>
+            <p className="text-label font-semibold text-foreground">Tarefas</p>
             <button onClick={() => openLista('empresas')}
-              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity"
-              style={{ fontSize: 'var(--text-caption)', color: 'var(--primary)', background: 'none', padding: 0, border: 'none' }}>
+              className="flex items-center gap-1 cursor-pointer hover:opacity-70 transition-opacity text-caption text-primary bg-transparent p-0 border-none">
               Ver todos <ChevronRight size={11} />
             </button>
           </div>
@@ -1242,7 +1257,7 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
               </tbody>
             </table>
           </div>
-        </div>
+        </Card>
       </div>
 
       {/* ── Listas Detalhadas Panel ───────────────────────────── */}
