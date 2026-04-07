@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "dev": "vite"
+    "dev": "vite",
+    "sync-design-tokens": "tsx src/design-system/sync/extract-figma-tokens.ts > src/design-system/tokens.ts && prettier --write src/design-system/tokens.ts"
   },
   "dependencies": {
     "@emotion/react": "11.14.0",
