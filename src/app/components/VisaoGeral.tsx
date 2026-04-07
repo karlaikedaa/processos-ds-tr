@@ -35,38 +35,38 @@ const donutData = [
 const metaDentroTotal = 1246;
 
 const empresas = [
-  { name: 'Empresa ABC Ltda', total: 48, abertas: 48, atraso: 2, multa: 2, progresso: 83 },
-  { name: 'Empresa XYZ S/A', total: 35, abertas: 35, atraso: 4, multa: 2, progresso: 80 },
-  { name: 'DEF Comércio', total: 29, abertas: 29, atraso: 0, multa: 0, progresso: 86 },
-  { name: 'GHI Serviços', total: 22, abertas: 22, atraso: 1, multa: 2, progresso: 62 },
-  { name: 'JKL Indústria', total: 18, abertas: 18, atraso: 0, multa: 0, progresso: 100 },
+  { name: 'Empresa ABC Ltda', total: 48, abertas: 8, abertasAtraso: 2, abertasMulta: 2, concluidas: 40, concluidasAtraso: 2, concluidasMulta: 2, progresso: 83, atraso: 4, multa: 4 },
+  { name: 'Empresa XYZ S/A', total: 35, abertas: 7, abertasAtraso: 4, abertasMulta: 2, concluidas: 28, concluidasAtraso: 4, concluidasMulta: 2, progresso: 80, atraso: 8, multa: 4 },
+  { name: 'DEF Comércio', total: 29, abertas: 4, abertasAtraso: 0, abertasMulta: 0, concluidas: 25, concluidasAtraso: 0, concluidasMulta: 0, progresso: 86, atraso: 0, multa: 0 },
+  { name: 'GHI Serviços', total: 22, abertas: 8, abertasAtraso: 1, abertasMulta: 1, concluidas: 14, concluidasAtraso: 1, concluidasMulta: 1, progresso: 64, atraso: 2, multa: 2 },
+  { name: 'JKL Indústria', total: 18, abertas: 0, abertasAtraso: 0, abertasMulta: 0, concluidas: 18, concluidasAtraso: 0, concluidasMulta: 0, progresso: 100, atraso: 0, multa: 0 },
 ];
 
 const responsaveis = [
-  { name: 'Maria Silva', initials: 'MS', abertas: 48, atraso: 2, multa: 2, total: 1723 },
-  { name: 'João Pereira', initials: 'JP', abertas: 35, atraso: 4, multa: 4, total: 121 },
-  { name: 'Ana Torres', initials: 'AT', abertas: 29, atraso: 0, multa: 0, total: 122 },
-  { name: 'Carlos Rocha', initials: 'CR', abertas: 22, atraso: 1, multa: 1, total: 346 },
-  { name: 'Fernanda Lima', initials: 'FL', abertas: 18, atraso: 0, multa: 0, total: 122 },
+  { name: 'Maria Silva', initials: 'MS', abertas: 48, abertasAtraso: 2, abertasMulta: 2, concluidas: 1675, concluidasAtraso: 2, concluidasMulta: 2, total: 1723, atraso: 4, multa: 4 },
+  { name: 'João Pereira', initials: 'JP', abertas: 35, abertasAtraso: 4, abertasMulta: 4, concluidas: 86, concluidasAtraso: 4, concluidasMulta: 4, total: 121, atraso: 8, multa: 8 },
+  { name: 'Ana Torres', initials: 'AT', abertas: 29, abertasAtraso: 0, abertasMulta: 0, concluidas: 93, concluidasAtraso: 0, concluidasMulta: 0, total: 122, atraso: 0, multa: 0 },
+  { name: 'Carlos Rocha', initials: 'CR', abertas: 22, abertasAtraso: 1, abertasMulta: 1, concluidas: 324, concluidasAtraso: 1, concluidasMulta: 1, total: 346, atraso: 2, multa: 2 },
+  { name: 'Fernanda Lima', initials: 'FL', abertas: 18, abertasAtraso: 0, abertasMulta: 0, concluidas: 104, concluidasAtraso: 0, concluidasMulta: 0, total: 122, atraso: 0, multa: 0 },
 ];
 
 const departamentos = [
-  { name: 'Contábil', abertas: 48, atraso: 2, multa: 2, total: 1723 },
-  { name: 'Fiscal', abertas: 35, atraso: 4, multa: 4, total: 121 },
-  { name: 'Administrativo', abertas: 29, atraso: 0, multa: 0, total: 122 },
-  { name: 'Pessoal', abertas: 22, atraso: 1, multa: 1, total: 346 },
-  { name: 'Patrimônio', abertas: 18, atraso: 0, multa: 0, total: 122 },
+  { name: 'Contábil', abertas: 48, abertasAtraso: 2, abertasMulta: 2, concluidas: 1675, concluidasAtraso: 2, concluidasMulta: 2, total: 1723, atraso: 4, multa: 4 },
+  { name: 'Fiscal', abertas: 35, abertasAtraso: 4, abertasMulta: 4, concluidas: 86, concluidasAtraso: 4, concluidasMulta: 4, total: 121, atraso: 8, multa: 8 },
+  { name: 'Administrativo', abertas: 29, abertasAtraso: 0, abertasMulta: 0, concluidas: 93, concluidasAtraso: 0, concluidasMulta: 0, total: 122, atraso: 0, multa: 0 },
+  { name: 'Pessoal', abertas: 22, abertasAtraso: 1, abertasMulta: 1, concluidas: 324, concluidasAtraso: 1, concluidasMulta: 1, total: 346, atraso: 2, multa: 2 },
+  { name: 'Patrimônio', abertas: 18, abertasAtraso: 0, abertasMulta: 0, concluidas: 104, concluidasAtraso: 0, concluidasMulta: 0, total: 122, atraso: 0, multa: 0 },
 ];
 
 const avatarColors = ['#B83C00', '#1573D3', '#387C2B', '#D49000', '#6C3FB5', '#C0392B'];
 
 // Tarefas agrupadas por nome
 const tarefasAgrupadas = [
-  { name: 'DCTF Ago/25', tipo: 'Mensal', total: 48, abertas: 46, atraso: 4, multa: 2, concluidas: 2 },
-  { name: 'REINF Out/25', tipo: 'Mensal', total: 35, abertas: 30, atraso: 0, multa: 0, concluidas: 5 },
-  { name: 'Alteração Contratual', tipo: 'Esporádica', total: 22, abertas: 22, atraso: 0, multa: 0, concluidas: 0 },
-  { name: 'ECF 2025', tipo: 'Anual', total: 20, abertas: 15, atraso: 6, multa: 4, concluidas: 5 },
-  { name: 'Balancete Jan/2026', tipo: 'Mensal', total: 18, abertas: 10, atraso: 0, multa: 0, concluidas: 8 },
+  { name: 'DCTF Ago/25', tipo: 'Mensal', total: 48, abertas: 8, abertasAtraso: 4, abertasMulta: 2, concluidas: 40, concluidasAtraso: 2, concluidasMulta: 2, progresso: 83, atraso: 6, multa: 4 },
+  { name: 'REINF Out/25', tipo: 'Mensal', total: 35, abertas: 7, abertasAtraso: 0, abertasMulta: 0, concluidas: 28, concluidasAtraso: 4, concluidasMulta: 2, progresso: 80, atraso: 4, multa: 2 },
+  { name: 'Alteração Contratual', tipo: 'Esporádica', total: 22, abertas: 3, abertasAtraso: 0, abertasMulta: 0, concluidas: 19, concluidasAtraso: 0, concluidasMulta: 0, progresso: 86, atraso: 0, multa: 0 },
+  { name: 'ECF 2025', tipo: 'Anual', total: 20, abertas: 8, abertasAtraso: 6, abertasMulta: 4, concluidas: 12, concluidasAtraso: 1, concluidasMulta: 2, progresso: 62, atraso: 7, multa: 6 },
+  { name: 'Balancete Jan/2026', tipo: 'Mensal', total: 18, abertas: 0, abertasAtraso: 0, abertasMulta: 0, concluidas: 18, concluidasAtraso: 0, concluidasMulta: 0, progresso: 100, atraso: 0, multa: 0 },
 ];
 
 // Mock data for empresa tasks (expandable - tarefas grouped by empresa)
