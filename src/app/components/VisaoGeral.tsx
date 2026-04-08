@@ -1148,48 +1148,6 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
         </div>
       </div>
 
-      {/* ── KPI Row 1 ─────────────────────────────────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        <KpiCard label="Total de tarefas abertas" value={1284} icon={<ListTodo size={15} style={{ color: 'var(--chart-2)' }} />}
-          iconBg="rgba(21,115,211,0.1)" onClick={() => navigateTarefas('lista', { status: 'Aberta' })} />
-        <KpiCard label="Total de tarefas gerando multas" value={899} icon={<Zap size={15} style={{ color: '#6C3FB5' }} />}
-          iconBg="rgba(108,63,181,0.1)" onClick={() => navigateTarefas('lista', { status: 'Em andamento' })} />
-        <KpiCard label="Total de tarefas atrasadas" value={38} icon={<AlertTriangle size={15} style={{ color: 'var(--chart-4)' }} />}
-          iconBg="rgba(220,10,10,0.1)" onClick={() => navigateTarefas('lista', { status: 'Impedida' })} />
-        <KpiCard label="Total de tarefas aprovação" value={347} icon={<Clock size={15} style={{ color: 'var(--chart-3)' }} />}
-          iconBg="rgba(254,166,1,0.12)" onClick={() => navigateTarefas('lista', { status: 'Aguardando aprovação' })} />
-      </div>
-
-      {/* ── KPI Row 2 — Tarefas sujeitas a multa ──────────────── */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-        {[
-          { value: 150, sub: 'A concluir - hoje',                                      iconColor: '#6C3FB5', iconBg: 'rgba(108,63,181,0.1)', tab: 'lista' as TarefasViewTab, filter: { status: 'Aberta' } as TarefasFilter },
-          { value: 347, sub: 'A concluir - em até 5 dias',                             iconColor: '#6C3FB5', iconBg: 'rgba(108,63,181,0.1)', tab: 'lista' as TarefasViewTab, filter: { status: 'Aberta' } as TarefasFilter },
-          { value: 150, sub: 'Concluídas e não vistas pelo cliente - hoje',            iconColor: 'var(--chart-5)', iconBg: 'rgba(238,80,5,0.1)', tab: 'lista' as TarefasViewTab, filter: { status: 'Concluída' } as TarefasFilter },
-          { value: 347, sub: 'Concluídas e não vistas pelo cliente - em até 5 dias',  iconColor: 'var(--chart-5)', iconBg: 'rgba(238,80,5,0.1)', tab: 'lista' as TarefasViewTab, filter: { status: 'Concluída' } as TarefasFilter },
-        ].map((item, i) => (
-          <div key={i}
-            onClick={() => navigateTarefas(item.tab, item.filter)}
-            className="bg-white rounded-lg p-4 flex flex-col gap-2 cursor-pointer hover:shadow-md transition-shadow"
-            style={{ boxShadow: 'var(--elevation-sm)', border: '1px solid transparent' }}
-            onMouseEnter={e => (e.currentTarget as HTMLElement).style.borderColor = 'var(--primary)'}
-            onMouseLeave={e => (e.currentTarget as HTMLElement).style.borderColor = 'transparent'}
-          >
-            <div className="flex items-start justify-between gap-2">
-              <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', lineHeight: 1.4 }}>Tarefas sujeitas a multa</span>
-              <div className="w-8 h-8 rounded-md flex items-center justify-center shrink-0" style={{ background: item.iconBg }}>
-                <Zap size={15} style={{ color: item.iconColor }} />
-              </div>
-            </div>
-            <p style={{ fontSize: '28px', fontWeight: 'var(--font-weight-semibold)', color: 'var(--foreground)', lineHeight: 1 }}>{item.value}</p>
-            <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', lineHeight: 1.3 }}>{item.sub}</span>
-            <span style={{ fontSize: 'var(--text-caption)', color: 'var(--primary)' }} className="flex items-center gap-1">
-              Ver tarefas <ChevronRight size={11} />
-            </span>
-          </div>
-        ))}
-      </div>
-
       {/* ── Tarefas por empresa e status ───────────────────────── */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         {/* Tarefas por empresa */}
