@@ -1222,7 +1222,7 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                   const isExpanded = expandedEmpresa === e.name;
                   const tarefas = mockEmpresaTasks[e.name] || [];
                   const pct = e.progresso;
-                  const progressColor = pct === 100 || pct >= 80 ? 'var(--chart-1)' : 'var(--chart-4)';
+                  const progressColor = pct >= 90 ? 'var(--chart-1)' : pct >= 50 ? 'var(--chart-3)' : 'var(--chart-4)';
 
                   // Helper function to render badge or dash
                   const renderBadgeOrDash = (value: number, color: string, bg: string) => {
@@ -1294,7 +1294,7 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                         <td className="py-2" style={{ minWidth: '120px' }}>
                           <div className="flex items-center gap-2">
                             <ProgressBar pct={pct} color={progressColor} />
-                            <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)', fontWeight: 'var(--font-weight-semibold)' }}>{pct}%</span>
+                            <span style={{ fontSize: 'var(--text-caption)', color: progressColor, fontWeight: 'var(--font-weight-semibold)' }}>{pct}%</span>
                           </div>
                         </td>
                       </tr>
