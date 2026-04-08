@@ -1343,35 +1343,54 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
             <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '340px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  {['Tarefa', 'Tipo', 'Total', 'Abertas', 'Atraso', 'Com multa', 'Concluídas'].map(h => (
-                    <th key={h} className="text-left pb-2 pr-2 last:pr-0"
-                      style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>{h}</th>
-                  ))}
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Tarefa</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Tipo</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Total</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Aberta em<br/>atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Aberta com<br/>multa</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>em atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>com multa</th>
+                  <th className="text-left pb-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Progresso</th>
                 </tr>
               </thead>
               <tbody>
                 {tarefasAgrupadas.map((tarefa) => {
                   const isExpanded = expandedTarefa === tarefa.name;
                   const empresas = mockTarefaEmpresas[tarefa.name] || [];
+                  const pct = tarefa.progresso;
+                  const progressColor = pct >= 90 ? 'var(--chart-1)' : pct >= 50 ? 'var(--chart-3)' : 'var(--chart-4)';
+
+                  // Helper function to render badge or dash
+                  const renderBadgeOrDash = (value: number, color: string, bg: string) => {
+                    return value > 0 ? (
+                      <BadgeCount value={value} color={color} bg={bg} />
+                    ) : (
+                      <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                    );
+                  };
+
                   return (
                     <React.Fragment key={tarefa.name}>
-                      <tr 
-                        style={{ borderBottom: isExpanded ? 'none' : '1px solid var(--border)' }} 
+                      <tr
+                        style={{ borderBottom: isExpanded ? 'none' : '1px solid var(--border)' }}
                         className="hover:bg-muted/20 transition-colors cursor-pointer"
                         onClick={(ev) => {
                           ev.stopPropagation();
                           setExpandedTarefa(isExpanded ? null : tarefa.name);
                         }}
                       >
+                        {/* Column 1: Tarefa (ChevronRight + FileText icon + name) */}
                         <td className="py-2 pr-2">
                           <div className="flex items-center gap-2">
-                            <ChevronRight 
-                              size={12} 
-                              style={{ 
-                                color: 'var(--muted-foreground)', 
+                            <ChevronRight
+                              size={12}
+                              style={{
+                                color: 'var(--muted-foreground)',
                                 transform: isExpanded ? 'rotate(90deg)' : 'none',
                                 transition: 'transform 0.2s'
-                              }} 
+                              }}
                             />
                             <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--muted)' }}>
                               <FileText size={11} style={{ color: 'var(--muted-foreground)' }} />
@@ -1379,9 +1398,11 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                             <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }} className="truncate max-w-[120px]">{tarefa.name}</span>
                           </div>
                         </td>
+
+                        {/* Column 2: Tipo badge */}
                         <td className="py-2 pr-2">
-                          <span className="px-2 py-0.5 rounded-full" style={{ 
-                            fontSize: 'var(--text-caption)', 
+                          <span className="px-2 py-0.5 rounded-full" style={{
+                            fontSize: 'var(--text-caption)',
                             color: tarefa.tipo === 'Mensal' ? 'var(--chart-2)' : tarefa.tipo === 'Anual' ? 'var(--chart-3)' : '#8B5CF6',
                             background: tarefa.tipo === 'Mensal' ? 'rgba(21,115,211,0.08)' : tarefa.tipo === 'Anual' ? 'rgba(254,166,1,0.08)' : 'rgba(139,92,246,0.08)',
                             fontWeight: 'var(--font-weight-semibold)'
@@ -1389,18 +1410,52 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                             {tarefa.tipo}
                           </span>
                         </td>
+
+                        {/* Column 3: Total */}
                         <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{tarefa.total}</td>
+
+                        {/* Column 4: Abertas */}
                         <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{tarefa.abertas}</td>
-                        <td className="py-2 pr-2"><BadgeCount value={tarefa.atraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" /></td>
-                        <td className="py-2 pr-2"><BadgeCount value={tarefa.multa} color="#6C3FB5" bg="rgba(108,63,181,0.1)" /></td>
-                        <td className="py-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--chart-1)', fontWeight: 'var(--font-weight-semibold)' }}>{tarefa.concluidas}</td>
+
+                        {/* Column 5: Aberta em atraso (red badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(tarefa.abertasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
+                        </td>
+
+                        {/* Column 6: Aberta com multa (purple badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(tarefa.abertasMulta, MULTA_COLOR, MULTA_BG)}
+                        </td>
+
+                        {/* Column 7: Concluídas */}
+                        <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{tarefa.concluidas}</td>
+
+                        {/* Column 8: Concluídas em atraso (red badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(tarefa.concluidasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
+                        </td>
+
+                        {/* Column 9: Concluídas com multa (purple badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(tarefa.concluidasMulta, MULTA_COLOR, MULTA_BG)}
+                        </td>
+
+                        {/* Column 10: Progresso (progress bar + percentage) */}
+                        <td className="py-2" style={{ minWidth: '120px' }}>
+                          <div className="flex items-center gap-2">
+                            <ProgressBar pct={pct} color={progressColor} />
+                            <span style={{ fontSize: 'var(--text-caption)', color: progressColor, fontWeight: 'var(--font-weight-semibold)' }}>{pct}%</span>
+                          </div>
+                        </td>
                       </tr>
+
+                      {/* Expansion row showing empresas */}
                       {isExpanded && empresas.length > 0 && (
                         <tr>
-                          <td colSpan={7} style={{ padding: 0 }}>
+                          <td colSpan={10} style={{ padding: 0 }}>
                             <div style={{ background: 'var(--input-background)', borderBottom: '1px solid var(--border)' }}>
                               {empresas.map((emp, empIdx) => (
-                                <div 
+                                <div
                                   key={empIdx}
                                   onClick={(ev) => {
                                     ev.stopPropagation();
