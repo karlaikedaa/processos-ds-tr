@@ -1206,35 +1206,53 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
             <table className="w-full" style={{ borderCollapse: 'collapse', minWidth: '340px' }}>
               <thead>
                 <tr style={{ borderBottom: '1px solid var(--border)' }}>
-                  {['Empresas', 'Total', 'Abertas', 'Atraso', 'Com multa', 'Progresso'].map(h => (
-                    <th key={h} className="text-left pb-2 pr-2 last:pr-0"
-                      style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)', whiteSpace: 'nowrap' }}>{h}</th>
-                  ))}
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Empresas</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Total</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Abertas</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Aberta em<br/>atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Aberta com<br/>multa</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>em atraso</th>
+                  <th className="text-left pb-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Concluídas<br/>com multa</th>
+                  <th className="text-left pb-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)', fontWeight: 'var(--font-weight-semibold)' }}>Progresso</th>
                 </tr>
               </thead>
               <tbody>
                 {empresas.map((e) => {
                   const isExpanded = expandedEmpresa === e.name;
                   const tarefas = mockEmpresaTasks[e.name] || [];
+                  const pct = e.progresso;
+                  const progressColor = pct === 100 || pct >= 80 ? 'var(--chart-1)' : 'var(--chart-4)';
+
+                  // Helper function to render badge or dash
+                  const renderBadgeOrDash = (value: number, color: string, bg: string) => {
+                    return value > 0 ? (
+                      <BadgeCount value={value} color={color} bg={bg} />
+                    ) : (
+                      <span style={{ fontSize: 'var(--text-caption)', color: 'var(--muted-foreground)' }}>—</span>
+                    );
+                  };
+
                   return (
                     <React.Fragment key={e.name}>
-                      <tr 
-                        style={{ borderBottom: isExpanded ? 'none' : '1px solid var(--border)' }} 
+                      <tr
+                        style={{ borderBottom: isExpanded ? 'none' : '1px solid var(--border)' }}
                         className="hover:bg-muted/20 transition-colors cursor-pointer"
                         onClick={(ev) => {
                           ev.stopPropagation();
                           setExpandedEmpresa(isExpanded ? null : e.name);
                         }}
                       >
+                        {/* Column 1: Empresas (ChevronRight + Building2 icon + name) */}
                         <td className="py-2 pr-2">
                           <div className="flex items-center gap-2">
-                            <ChevronRight 
-                              size={12} 
-                              style={{ 
-                                color: 'var(--muted-foreground)', 
+                            <ChevronRight
+                              size={12}
+                              style={{
+                                color: 'var(--muted-foreground)',
                                 transform: isExpanded ? 'rotate(90deg)' : 'none',
                                 transition: 'transform 0.2s'
-                              }} 
+                              }}
                             />
                             <div className="w-6 h-6 rounded-full flex items-center justify-center shrink-0" style={{ background: 'var(--muted)' }}>
                               <Building2 size={11} style={{ color: 'var(--muted-foreground)' }} />
@@ -1242,20 +1260,50 @@ export function VisaoGeral({ onNavigateTarefas }: VisaoGeralProps) {
                             <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }} className="truncate max-w-[100px]">{e.name}</span>
                           </div>
                         </td>
+
+                        {/* Column 2: Total */}
                         <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{e.total}</td>
+
+                        {/* Column 3: Abertas */}
                         <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{e.abertas}</td>
-                        <td className="py-2 pr-2"><BadgeCount value={e.atraso} color="var(--chart-4)" bg="rgba(220,10,10,0.1)" /></td>
-                        <td className="py-2 pr-2"><BadgeCount value={e.multa} color="#6C3FB5" bg="rgba(108,63,181,0.1)" /></td>
-                        <td className="py-2" style={{ minWidth: '80px' }}>
-                          <ProgressBar pct={e.progresso} color={e.progresso === 100 ? 'var(--chart-1)' : 'var(--primary)'} />
+
+                        {/* Column 4: Aberta em atraso (red badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(e.abertasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
+                        </td>
+
+                        {/* Column 5: Aberta com multa (purple badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(e.abertasMulta, MULTA_COLOR, MULTA_BG)}
+                        </td>
+
+                        {/* Column 6: Concluídas */}
+                        <td className="py-2 pr-2" style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)' }}>{e.concluidas}</td>
+
+                        {/* Column 7: Concluídas em atraso (red badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(e.concluidasAtraso, 'var(--chart-4)', 'rgba(220,10,10,0.1)')}
+                        </td>
+
+                        {/* Column 8: Concluídas com multa (purple badge) */}
+                        <td className="py-2 pr-2">
+                          {renderBadgeOrDash(e.concluidasMulta, MULTA_COLOR, MULTA_BG)}
+                        </td>
+
+                        {/* Column 9: Progresso (progress bar + percentage) */}
+                        <td className="py-2" style={{ minWidth: '120px' }}>
+                          <div className="flex items-center gap-2">
+                            <ProgressBar pct={pct} color={progressColor} />
+                            <span style={{ fontSize: 'var(--text-caption)', color: 'var(--foreground)', fontWeight: 'var(--font-weight-semibold)' }}>{pct}%</span>
+                          </div>
                         </td>
                       </tr>
                       {isExpanded && tarefas.length > 0 && (
                         <tr>
-                          <td colSpan={6} style={{ padding: 0 }}>
+                          <td colSpan={9} style={{ padding: 0 }}>
                             <div style={{ background: 'var(--input-background)', borderBottom: '1px solid var(--border)' }}>
                               {tarefas.map((t, tidx) => (
-                                <div 
+                                <div
                                   key={t.id}
                                   onClick={(ev) => {
                                     ev.stopPropagation();
