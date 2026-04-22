@@ -1,5 +1,6 @@
 import svgPaths from "./svg-jtevsr4a18";
-import imgBannerConvideUmCliente from "figma:asset/63ac0524f329a6f3893bdfe7391f35a7d43535ee.png";
+// TODO: asset real — exportar do Figma
+const imgBannerConvideUmCliente = "https://placehold.co/800x450/D64000/white?text=Banner+Convide+Cliente";
 
 function TrLogo() {
   return (

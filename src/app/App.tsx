@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import svgPaths from '../imports/svg-jtevsr4a18';
-import imgVideoBanner from 'figma:asset/c72fd606b8866183803c680b0559f794996a5a0f.png';
+// import imgVideoBanner from 'figma:asset/c72fd606b8866183803c680b0559f794996a5a0f.png';
+// Placeholder for video banner - replace with actual asset when available
+const imgVideoBanner = 'data:image/svg+xml,%3Csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 500"%3E%3Crect fill="%23e5e7eb" width="1440" height="500"/%3E%3Ctext x="50%25" y="50%25" dominant-baseline="middle" text-anchor="middle" font-family="sans-serif" font-size="24" fill="%239ca3af"%3ESaiba como configurar o Processos%3C/text%3E%3C/svg%3E';
 import { ChevronDown, ChevronUp, ChevronLeft, Menu, X } from 'lucide-react';
 import { VisaoGeral, TarefasViewTab, TarefasFilter } from './components/VisaoGeral';
 import { Tarefas } from './components/Tarefas';
